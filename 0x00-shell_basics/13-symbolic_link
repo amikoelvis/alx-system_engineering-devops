@@ -1,2 +1,2 @@
 #!/bin/bash
-ln -la ./_ls_
+stat _ls_
