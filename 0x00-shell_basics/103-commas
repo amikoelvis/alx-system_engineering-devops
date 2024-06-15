@@ -1,2 +1,2 @@
 #!/bin/bash
-(ls -Ap --group-directories-first | grep -v '^.$' | grep -v '^..$'; ls -Ap | grep -E '^\.\.$' | awk 'BEGIN{ORS=","} {print} END{print "\n"}' | 's/,$/\n/'
+ls -m
