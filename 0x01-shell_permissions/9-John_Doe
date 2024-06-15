@@ -1,2 +1,2 @@
 #!/bin/bash
-chmod 751 julien:julien ./hello
+sudo chmod 751 hello
