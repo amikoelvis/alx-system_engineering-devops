@@ -1,2 +1,2 @@
 #!/bin/bash
-paste -d '\n' - - < inputfile.txt | cut -d '\n' -f 1- --output-delimiter=$'\n'
+n=1; cat inputfile.txt | while read line; do [ $((n % 2)) -eq 1 ] && echo "$line"; n=$((n + 1)); done
