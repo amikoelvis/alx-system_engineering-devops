@@ -1,0 +1,2 @@
+#!/bin/bash
+echo "obase=8;ibase=5;$(echo $WATER | tr water 01234)" | bc | x=$(echo "obase=10;ibase=4;$(echo $STIR | tr stir 0123)" | bc); echo $(( $(echo "obase=10;ibase=5;$(echo $WATER | tr water 01234)" | bc) + $x )) | awk '{n=$1; s="bestchol"; r=""; while(n>0){r=substr(s,n%8+1,1)r; n=int(n/8)} print r}'
