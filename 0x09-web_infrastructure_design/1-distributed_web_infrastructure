@@ -1,0 +1,96 @@
+# Distributed Web Infrastructure — Three Server Setup Hosting www.foobar.com
+
+## Whiteboard Diagram
+
+![Simple Web Stack Diagram](./1-distributed_web_infrastructure)
+
+---
+
+## **Infrastructure Components**
+
+- **2 application servers** (Server A, Server B) each with:
+  - Web server (Nginx)
+  - Application server (e.g., PHP-FPM, Node.js, or Gunicorn)
+  - Application files (shared or replicated code base)
+- **1 load balancer** (HAProxy)
+  - Distributes incoming traffic between Server A and Server B
+- **1 database** (MySQL Primary-Replica setup)
+  - Primary DB on one server, Replica DB on another (or managed service)
+- **Domain:** foobar.com with `www` A record pointing to the load balancer’s public IP
+
+---
+
+## **Why each element is added**
+
+1. **Extra application server** — Provides redundancy and ability to handle more traffic; if one server fails, the other can continue serving.
+2. **Load balancer (HAProxy)** — Distributes traffic to backend servers; improves availability, performance, and scalability.
+3. **Primary-Replica database** — Improves data redundancy and read performance; Replica can be used for read-heavy queries or as a failover.
+
+---
+
+## **Load Balancer Distribution Algorithm**
+
+**Algorithm:** Round Robin
+
+- Works by sequentially routing each incoming request to the next server in the list, looping back to the start after reaching the last server.
+- Example: Request 1 → Server A, Request 2 → Server B, Request 3 → Server A, etc.
+- Balances traffic evenly when servers have similar capacity.
+
+---
+
+## **Active-Active vs Active-Passive**
+
+- **Active-Active:**
+
+  - Both backend servers actively handle requests at the same time.
+  - Load balancer distributes traffic to both.
+  - Higher resource utilization and better performance.
+
+- **Active-Passive:**
+  - Only one backend server actively handles requests.
+  - The second server is on standby and only takes over if the active server fails.
+  - Less efficient use of resources but can be simpler to manage.
+
+**Our setup:** Active-Active (both servers serve traffic simultaneously).
+
+---
+
+## **Primary-Replica (Master-Slave) Database Cluster**
+
+- **Primary Node (Master):** Handles **write** operations (INSERT, UPDATE, DELETE) and can also handle reads.
+- **Replica Node (Slave):** Receives a copy of the data from the Primary (via replication) and handles **read-only** queries.
+- Replication can be asynchronous (Replica may lag slightly) or semi-synchronous.
+- Benefits:
+  - Reduces read load on the Primary.
+  - Provides redundancy in case the Primary fails.
+
+---
+
+## **Differences between Primary and Replica in the application**
+
+- **Primary:** Application connects here for any write operations; can also read if necessary.
+- **Replica:** Application connects here for read-only queries (e.g., search, analytics) to reduce load on the Primary.
+
+---
+
+## **Issues with this infrastructure**
+
+1. **SPOF (Single Point of Failure)**
+
+   - The load balancer is still a single point of failure unless made redundant.
+   - The Primary DB is a SPOF for writes — if it fails, write operations stop.
+
+2. **Security issues**
+
+   - No firewall: Servers are fully exposed to the Internet.
+   - No HTTPS: Data is transmitted in plaintext and vulnerable to interception.
+
+3. **No monitoring**
+   - No health checks, performance tracking, or alerting; issues may go unnoticed.
+
+---
+
+## **URLs**
+
+Whiteboard diagram: ![Simple Web Stack Diagram](./distributed_web_infrastructure.png)
+GitHub file link: https://github.com/amikoelvis/alx-system_engineering-devops/blob/main/0x09-web_infrastructure_design/1-distributed_web_infrastructure
