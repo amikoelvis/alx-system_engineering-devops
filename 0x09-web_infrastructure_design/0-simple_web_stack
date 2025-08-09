@@ -80,10 +80,3 @@ Uses **TCP/IP** over the Internet, with the **HTTP** or **HTTPS** protocol.
 3. **Scalability limitations**
    - Cannot handle high traffic beyond the capacity of a single machine.  
      All components compete for CPU, RAM, and disk resources.
-
----
-
-## **URLs**
-
-Whiteboard diagram: ![Simple Web Stack Diagram](./White_board.png)
-GitHub file link: https://github.com/amikoelvis/alx-system_engineering-devops/blob/main/0x09-web_infrastructure_design/0-simple_web_stack

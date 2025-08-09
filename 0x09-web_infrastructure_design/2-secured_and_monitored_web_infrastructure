@@ -1,0 +1,43 @@
+# 2. Secured and Monitored Web Infrastructure
+
+## Diagram
+
+![Secured and Monitored Web Infrastructure](./secured_and_monitored_web_infrastructure.png)
+
+## Components and Reasons for Adding Them
+
+1. **3 Firewalls**
+
+   - One in front of the load balancer.
+   - One in front of each application server.
+   - **Purpose:** Blocks unauthorized access, only allows legitimate traffic to specific services.
+
+2. **SSL Certificate (HTTPS)**
+
+   - Installed on the load balancer.
+   - **Purpose:** Encrypts data between the client and the infrastructure to protect sensitive information in transit.
+
+3. **3 Monitoring Clients**
+   - Installed on each server (load balancer, app servers, database server).
+   - **Purpose:** Collect performance data (CPU, memory usage, disk usage, QPS) and send it to a monitoring service (e.g., Sumo Logic, Datadog, Prometheus).
+
+---
+
+## Specific Explanations
+
+- **Firewalls:** Network security systems that filter incoming and outgoing traffic based on predefined rules.
+- **Why HTTPS:** Protects users against man-in-the-middle attacks by encrypting communication.
+- **Monitoring Purpose:** Detects issues early, tracks system health, and triggers alerts when performance thresholds are exceeded.
+- **How Monitoring Tools Collect Data:** Agents (clients) installed on each server gather metrics and logs, sending them to a central service for analysis.
+- **Monitoring QPS (Queries per Second):** Configure the monitoring agent to track incoming HTTP requests per second via logs or Nginx’s status module.
+
+---
+
+## Issues with this Infrastructure
+
+1. **SSL Termination at the Load Balancer:**
+   - Traffic between the load balancer and backend servers isn’t encrypted, which is a risk in insecure networks.
+2. **Single Write-Enabled MySQL Server:**
+   - If the primary server fails, the system loses write capability until failover is performed.
+3. **Servers with All Components Installed:**
+   - If one server is compromised, all layers of the stack (database, application, web server) are exposed.
