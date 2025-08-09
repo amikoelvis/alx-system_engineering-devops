@@ -1,0 +1,84 @@
+# Simple Web Stack — One Server Hosting www.foobar.com
+
+## Whiteboard Diagram
+
+![Simple Web Stack Diagram](./White_board.png)
+
+## Description
+
+A single-server setup hosting a website accessible at www.foobar.com, using:
+
+- 1 server (public IP: 8.8.8.8)
+- Nginx (web server)
+- Application server (e.g., PHP-FPM, Node.js, or Gunicorn)
+- Application files (code base)
+- MySQL database
+- Domain: foobar.com with a `www` DNS record pointing to `8.8.8.8` (A record)
+
+---
+
+## **Request Flow**
+
+1. **User** types `www.foobar.com` into a browser.
+2. **DNS resolution**: The `www` A record in DNS returns `8.8.8.8`.
+3. **TCP connection**: The browser connects to `8.8.8.8` on port 80 (HTTP) or 443 (HTTPS).
+4. **Nginx (web server)** handles the request:
+   - Serves static files directly.
+   - For dynamic requests, proxies to the **application server**.
+5. **Application server** runs the application code (stored on the server).
+6. The application queries **MySQL** for data when needed.
+7. The response travels back through Nginx → Internet → User’s browser.
+
+---
+
+## **Key Concepts**
+
+### 1. What is a server?
+
+A physical or virtual computer that provides services to other devices (clients).  
+Here, it hosts Nginx, the application runtime, and MySQL.
+
+### 2. Role of the domain name
+
+Maps a human-readable name (foobar.com) to an IP address.  
+Allows users to access the site without remembering the IP.
+
+### 3. Type of DNS record for `www` in `www.foobar.com`
+
+`www` is an **A record** pointing to the IP address `8.8.8.8`.
+
+### 4. Role of the web server (Nginx)
+
+Handles incoming HTTP(S) requests, serves static content,  
+terminates SSL/TLS, and proxies dynamic requests to the application server.
+
+### 5. Role of the application server
+
+Executes the business logic of the site, processes user requests,  
+generates dynamic content, and interacts with the database.
+
+### 6. Role of the database (MySQL)
+
+Stores and retrieves structured application data (e.g., user info, posts, orders).
+
+### 7. Communication between server and user’s computer
+
+Uses **TCP/IP** over the Internet, with the **HTTP** or **HTTPS** protocol.
+
+---
+
+## **Issues with this infrastructure**
+
+1. **Single Point of Failure (SPOF)**
+
+   - If the server goes down, the website becomes unavailable.
+
+2. **Downtime during maintenance**
+
+   - Restarting Nginx, updating code, or upgrading the database will cause outages.
+
+3. **Scalability limitations**
+   - Cannot handle high traffic beyond the capacity of a single machine.  
+     All components compete for CPU, RAM, and disk resources.
+
+---
