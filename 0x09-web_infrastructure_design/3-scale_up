@@ -1,0 +1,44 @@
+# 3. Scale Up
+
+## Infrastructure Overview
+
+We are expanding the infrastructure from the secured and monitored setup by:
+
+- Adding **1 new server**
+- Adding a **second load balancer (HAProxy)** configured in a **cluster** with the first one for high availability
+- Splitting the components (web server, application server, database) onto **their own dedicated servers**
+
+## Components
+
+1. **Second Load Balancer (HAProxy in cluster mode)**
+
+   - **Why:** Prevents a single point of failure at the load balancer level. If one LB goes down, the other takes over seamlessly.
+   - **Cluster Setup:** The load balancers are configured in an _Active-Active_ or _Active-Passive_ mode depending on performance and failover needs.
+
+2. **Dedicated Web Server**
+
+   - **Why:** Separating the web server from the application server increases efficiency and isolates static content delivery (HTML, CSS, JS, images) from backend logic processing.
+
+3. **Dedicated Application Server**
+
+   - **Why:** Handles all business logic and application code execution separately from static asset serving, allowing independent scaling.
+
+4. **Dedicated Database Server**
+   - **Why:** Keeps database queries and storage isolated for better performance, security, and easier scaling (e.g., adding replicas).
+
+## Benefits of Scaling Up
+
+- Improved **availability** — no single point of failure at the LB.
+- Better **performance** — servers specialize in their role.
+- Easier **maintenance** — work on one component without affecting others.
+- **Scalability** — can scale individual layers independently.
+
+## Issues That May Still Exist
+
+- If the database is still a single primary without replicas, it remains a SPOF for write operations.
+- Costs and complexity increase.
+- Network latency between separated components might slightly increase response times if not optimized.
+
+## Diagram
+
+![Scale Up Diagram](./3-scale_up.png)
